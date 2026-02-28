@@ -1,0 +1,90 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+  id-token: write
+  attestations: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  release:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run lint
+        run: npm run lint
+
+      - name: Build extension
+        run: npm run build
+
+      - name: Get version from tag
+        id: get_version
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Create extension archive
+        run: |
+          zip -r "sadaqah-box-${{ steps.get_version.outputs.version }}.zip" \
+            assets/ \
+            metadata/ \
+            src/ \
+            .gitignore \
+            .prettierrc \
+            CHANGELOG.md \
+            eslint.config.js \
+            LICENSE \
+            package.json \
+            README.md \
+            tsconfig.json
+
+      - name: Create source archive
+        run: |
+          git archive --format=zip --output="sadaqah-box-${{ steps.get_version.outputs.version }}-source.zip" HEAD
+
+      - name: Determine release type
+        id: release_type
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          if [[ "$VERSION" =~ -(alpha|beta|rc|dev) ]]; then
+            echo "prerelease=true" >> $GITHUB_OUTPUT
+          else
+            echo "prerelease=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-path: |
+            sadaqah-box-*.zip
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Release ${{ steps.get_version.outputs.version }}
+          files: |
+            sadaqah-box-${{ steps.get_version.outputs.version }}.zip
+            sadaqah-box-${{ steps.get_version.outputs.version }}-source.zip
+          generate_release_notes: true
+          prerelease: ${{ steps.release_type.outputs.prerelease == 'true' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
