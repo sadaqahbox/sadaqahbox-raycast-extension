@@ -4,7 +4,7 @@ All notable changes to the Sadaqah Box Raycast Extension will be documented in t
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Codebase Refactor & Reliability Improvements] - {PR_MERGE_DATE}
+## [1.1.0] - 2026-11-26
 
 ### Fixed
 - **Sadaqah Amount Multiplication** – Fixed `AddSadaqahForm` to multiply `value * amount` when both are provided, matching the backend API contract
