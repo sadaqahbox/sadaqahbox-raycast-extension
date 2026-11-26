@@ -22,7 +22,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Standardized package management on Bun and updated dependencies
 - Updated README header and erklab sponsorship branding
 
-## [1.0.0] - 2026-02-28
+## [Initial Version] - 2026-03-12
 
 ### Added
 
