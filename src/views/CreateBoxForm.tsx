@@ -82,9 +82,9 @@ export default function CreateBoxForm({ onCreate }: CreateBoxProps) {
       <Form.Dropdown
         id="baseCurrencyId"
         title="Base Currency"
-        info="Defaults to USD if not selected. Cannot be changed after sadaqahs are added."
+        info="Defaults to Gold (XAU) if not selected. Cannot be changed after sadaqahs are added."
       >
-        <Form.Dropdown.Item value="" title="Default (USD)" />
+        <Form.Dropdown.Item value="" title="Default (XAU)" />
         {currencies.map((currency) => (
           <Form.Dropdown.Item key={currency.id} value={currency.id} title={`${currency.name} (${currency.code})`} />
         ))}

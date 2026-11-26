@@ -54,9 +54,14 @@ export default function BoxDetail({ boxId, onBoxDeleted, onSadaqahDeleted }: Box
       setBox(boxResponse.box);
       setStats(boxResponse.stats);
       setSadaqahs(sadaqahsResponse.sadaqahs);
-      setTotalCount(sadaqahsResponse.pagination?.total || boxResponse.box.count || 0);
+      setTotalCount(sadaqahsResponse.total ?? sadaqahsResponse.pagination?.total ?? boxResponse.box.count ?? 0);
       setCollections(collectionsResponse.collections);
-      setCollectionsTotal(collectionsResponse.pagination?.total || collectionsResponse.collections.length || 0);
+      setCollectionsTotal(
+        collectionsResponse.total ??
+          collectionsResponse.pagination?.total ??
+          collectionsResponse.collections.length ??
+          0,
+      );
     } catch (error) {
       const message = getErrorMessage(error);
       setLoadError(message);

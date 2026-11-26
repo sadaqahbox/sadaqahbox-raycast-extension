@@ -4,6 +4,12 @@ All notable changes to the Sadaqah Box Raycast Extension will be documented in t
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.1.2] - 2026-11-26
+
+### Fixed
+- **Preset & Add Sadaqah Value Multiplication** – Removed client-side `value * amount` pre-multiplication in preset quick-add and `AddSadaqahForm` so unit `value` and `amount` map accurately to the updated API contract
+- **Stats, Pagination & Default Currency Alignment** – Aligned `StatsResponse` with `{ stats }` (`convertedTotal` / normalized `totalValue`), read top-level `total` on sadaqah and collection lists, and updated the default base currency label to `Gold (XAU)`
+
 ## [1.1.0] - 2026-11-26
 
 ### Fixed

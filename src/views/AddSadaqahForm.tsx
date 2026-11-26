@@ -38,14 +38,12 @@ export default function AddSadaqahForm({ box, onAdd }: AddSadaqahProps) {
     }
 
     const { amount, value, currencyId } = validation.data;
-    // Backend addSadaqah uses `input.value ?? input.amount`, so multiply value * amount client-side
-    const totalValue = value !== undefined && amount !== undefined ? value * amount : (value ?? amount);
 
     try {
       setIsSubmitting(true);
       await addSadaqahCached(box.id, {
         amount,
-        value: totalValue,
+        value,
         currencyId: currencyId || box.baseCurrencyId,
       });
 
@@ -84,7 +82,7 @@ export default function AddSadaqahForm({ box, onAdd }: AddSadaqahProps) {
         placeholder="Enter value (e.g., 10.50)"
         error={valueError}
         onChange={() => setValueError(undefined)}
-        info="The monetary value per item (multiplied by amount if both are provided)"
+        info="The monetary value per item"
       />
       <Form.TextField
         id="amount"

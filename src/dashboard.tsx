@@ -98,7 +98,7 @@ export default function DashboardCommand() {
 
     try {
       await addSadaqahCached(box.id, {
-        value: totalValue,
+        value: preset.value,
         currencyId: preset.currencyId,
         amount,
       });
@@ -121,10 +121,18 @@ export default function DashboardCommand() {
 
   const refreshAfterMutation = () => fetchData(true);
 
-  const totalBoxes = boxes.length;
-  const totalSadaqahs = boxes.reduce((sum, box) => sum + (box.count ?? 0), 0);
-  const totalValue = boxes.reduce((sum, box) => sum + (box.totalValue ?? 0), 0);
-  const primaryCurrency = boxes.find((b) => b.baseCurrency)?.baseCurrency || stats?.primaryCurrency || undefined;
+  const statsData = stats?.stats;
+  const totalBoxes = statsData?.totalBoxes ?? boxes.length;
+  const totalSadaqahs = statsData?.totalSadaqahs ?? boxes.reduce((sum, box) => sum + (box.count ?? 0), 0);
+  const totalValue =
+    statsData?.convertedTotal?.value ??
+    statsData?.totalValue ??
+    boxes.reduce((sum, box) => sum + (box.totalValue ?? 0), 0);
+  const primaryCurrency =
+    statsData?.convertedTotal?.currency ??
+    statsData?.primaryCurrency ??
+    boxes.find((b) => b.baseCurrency)?.baseCurrency ??
+    undefined;
 
   return (
     <List
